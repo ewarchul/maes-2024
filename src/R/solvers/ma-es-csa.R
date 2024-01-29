@@ -84,6 +84,8 @@ ma_es_csa <- function(par, fn, ..., lower, upper, control = list()) {
     pop.log <- array(0, c(N, mu, maxiter))
   }
 
+  bestVal.log <- matrix(0, nrow = 0, ncol = 1)
+
   pc <- rep(0.0, N)
   ps <- rep(0.0, N)
 
@@ -142,6 +144,9 @@ ma_es_csa <- function(par, fn, ..., lower, upper, control = list()) {
     arindex <- order(arfitness)
     arfitness <- arfitness[arindex]
 
+
+    bestVal.log <- rbind(bestVal.log, min(suppressWarnings(min(bestVal.log)), min(arfitness)))
+
     aripop <- arindex[1:mu]
     selx <- arx[, aripop]
     xmean <- drop(selx %*% weights)
@@ -183,6 +188,8 @@ ma_es_csa <- function(par, fn, ..., lower, upper, control = list()) {
   if (log.sigma) log$sigma <- sigma.log[1:iter]
   if (log.eigen) log$eigen <- eigen.log[1:iter, ]
   if (log.pop) log$pop <- pop.log[, , 1:iter]
+
+  log$bestVal <- bestVal.log
 
   names(best.fit) <- NULL
   res <- list(
