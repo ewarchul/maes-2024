@@ -36,11 +36,6 @@ ma_es_tpa <- function(par, fn, ..., lower, upper, control = list()) {
   keep.best <- controlParam("keep.best", TRUE)
   vectorized <- controlParam("vectorized", FALSE)
 
-  log.all <- controlParam("diag", TRUE)
-  log.sigma <- controlParam("diag.sigma", log.all)
-  log.eigen <- controlParam("diag.eigen", FALSE)
-  log.value <- controlParam("diag.value", log.all)
-  log.pop <- controlParam("diag.pop", log.all)
 
   lambda <- controlParam("lambda", 4 + floor(3 * log(N)))
   mu <- controlParam("mu", floor(lambda / 2))
@@ -79,18 +74,6 @@ ma_es_tpa <- function(par, fn, ..., lower, upper, control = list()) {
   best.fit <- Inf
   best.par <- NULL
 
-  if (log.sigma) {
-    sigma.log <- numeric(maxiter)
-  }
-  if (log.eigen) {
-    eigen.log <- matrix(0, nrow = maxiter, ncol = N)
-  }
-  if (log.value) {
-    value.log <- matrix(0, nrow = maxiter, ncol = mu)
-  }
-  if (log.pop) {
-    pop.log <- array(0, c(N, mu, maxiter))
-  }
 
   bestVal.log <- matrix(0, nrow = 0, ncol = 1)
 
@@ -116,9 +99,6 @@ ma_es_tpa <- function(par, fn, ..., lower, upper, control = list()) {
     if (!keep.best) {
       best.fit <- Inf
       best.par <- NULL
-    }
-    if (log.sigma) {
-      sigma.log[iter] <- sigma
     }
 
     arz <- matrix(rnorm(N * lambda), ncol = lambda)
@@ -207,12 +187,6 @@ ma_es_tpa <- function(par, fn, ..., lower, upper, control = list()) {
   cnt <- c(`function` = as.integer(counteval), gradient = NA)
 
   log <- list()
-  if (log.value) log$value <- value.log[1:iter, ]
-  if (log.sigma) log$sigma <- sigma.log[1:iter]
-  if (log.eigen) log$eigen <- eigen.log[1:iter, ]
-  if (log.pop) log$pop <- pop.log[, , 1:iter]
-
-
   log$bestVal <- bestVal.log
 
   names(best.fit) <- NULL
