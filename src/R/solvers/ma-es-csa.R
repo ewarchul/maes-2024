@@ -29,8 +29,9 @@ ma_es_csa <- function(par, fn, ..., lower, upper, control = list()) {
 
   trace <- controlParam("trace", FALSE)
   fnscale <- controlParam("fnscale", 1)
-  stopfitness <- controlParam("stopfitness", -Inf)
-  maxiter <- controlParam("maxit", 100 * N^2)
+  stopfitness <- controlParam("stopfitness", 10^(-10))
+  budget      <- controlParam("budget", 10000*N ) 
+
   sigma <- controlParam("sigma", 0.5)
   sc_tolx <- controlParam("stop.tolx", 1e-12 * sigma) 
   keep.best <- controlParam("keep.best", TRUE)
@@ -44,6 +45,7 @@ ma_es_csa <- function(par, fn, ..., lower, upper, control = list()) {
 
   lambda <- controlParam("lambda", 4 + floor(3 * log(N)))
   mu <- controlParam("mu", floor(lambda / 2))
+  maxiter     <- controlParam("maxit", round(budget/lambda))
 
   weights <- controlParam("weights", log(mu + 1) - log(1:mu))
   weights <- weights / sum(weights)
@@ -102,7 +104,7 @@ ma_es_csa <- function(par, fn, ..., lower, upper, control = list()) {
 
   arx <- matrix(0.0, nrow = N, ncol = lambda)
   arfitness <- numeric(lambda)
-  while (iter < maxiter) {
+  while (counteval < budget) {
     iter <- iter + 1L
 
     if (!keep.best) {
