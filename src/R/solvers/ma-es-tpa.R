@@ -145,8 +145,6 @@ ma_es_tpa <- function(par, fn, ..., lower, upper, control = list()) {
     sely <- ary[, aripop]
     ymean <- drop(sely %*% weights)
 
-    if (log.pop) pop.log[, , iter] <- selx
-    if (log.value) value.log[iter, ] <- arfitness[aripop]
 
     ps <- (1 - cs) * ps +
       sqrt(cs * (2 - cs) * mueff) * zmean

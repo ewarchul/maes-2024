@@ -143,9 +143,6 @@ ma_es_psr <- function(par, fn, ..., lower, upper, control = list()) {
     selz <- arz[, aripop]
     zmean <- drop(selz %*% weights)
 
-    if (log.pop) pop.log[, , iter] <- selx
-    if (log.value) value.log[iter, ] <- arfitness[aripop]
-
     ps <- (1 - cs) * ps +
       sqrt(cs * (2 - cs) * mueff) * zmean
 
